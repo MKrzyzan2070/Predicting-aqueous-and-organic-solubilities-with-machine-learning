@@ -1,0 +1,3 @@
+ESOL: estimating aqueous solubility directly from molecular structure
+J. Chem. Inf. Comput. Sci., 44 (2004), pp. 1000-1005
+

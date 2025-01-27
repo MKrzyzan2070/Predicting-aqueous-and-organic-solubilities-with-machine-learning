@@ -99,7 +99,7 @@ def KFold_validation_test_validation(path, make_pickle, model, do_PCA):
         dataset_name = "Aq_Solu"
         ###################### RandomForest ######################
         if model == "RF":
-            # Training the model (getting the best parameters):
+            # Training datasets the model (getting the best parameters):
             random_forest_model_fit, grid_search_r2_score = Code.Train_RF_model(kf, x_data_train_split, y_data_train_split_binned,
                                                                                 name, y_data_train_split, dataset_name)
             # Saving the model:
@@ -111,7 +111,7 @@ def KFold_validation_test_validation(path, make_pickle, model, do_PCA):
 
         ###################### LightGBM ######################
         elif model == "LightGBM":
-            # Training the model (getting the best parameters):
+            # Training datasets the model (getting the best parameters):
             lgbm_model_fit, grid_search_r2_score = Code.Train_LGBM_model(kf, x_data_train_split, y_data_train_split_binned,
                                                                          name, y_data_train_split, dataset_name)
             with open(f"Pickled Models/Aq_Solu_Plot/Plot_{name}_{model}.pkl", 'wb') as file:
@@ -147,7 +147,7 @@ def KFold_validation_test_validation(path, make_pickle, model, do_PCA):
             elif model == "LightGBM":
                 ML_model = lgb.LGBMRegressor(**best_params)
 
-            # Training the model:
+            # Training datasets the model:
             ML_model_fit = ML_model.fit(x_train, y_train)
             # Saving the model:
             with open(f"Pickled Models/Aq_Solu_KFold/KFold_{i}_{name}_{model}.pkl", 'wb') as file:
@@ -290,7 +290,7 @@ def Plot(path, model, make_pickle):
 
     # Some axes stuff:
     ax_main.set_xlabel('Predicted log(S / mol/dm³)', fontsize=20)
-    ax_main.set_ylabel('Experimental log(S / mol/dm³)', fontsize=20)
+    ax_main.set_ylabel('Experimental datasets log(S / mol/dm³)', fontsize=20)
 
     ax_main.set_xticks(ticks)
     ax_main.set_yticks(ticks)

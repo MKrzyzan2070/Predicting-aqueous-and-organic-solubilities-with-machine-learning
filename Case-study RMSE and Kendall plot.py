@@ -4,14 +4,14 @@ import matplotlib.pyplot as plt
 from scipy.stats import gaussian_kde
 from matplotlib.colors import LinearSegmentedColormap
 
-df = pd.read_csv("Organic solubility trends comparison.csv")
+df = pd.read_csv("Case-study metrics.csv")
 
 data = np.vstack([df["Kendall_Distance"], df["RMSE"]])
 bw_method = 0.40
 kde = gaussian_kde(data, bw_method=bw_method)
 
 xmin, xmax = 0, 0.7
-ymin, ymax = 0, 1.8
+ymin, ymax = 0, 1.4
 xx, yy = np.mgrid[xmin:xmax:100j, ymin:ymax:100j]
 positions = np.vstack([xx.ravel(), yy.ravel()])
 
@@ -28,19 +28,19 @@ fig.subplots_adjust(left=0.15, top=0.85, right=0.85, bottom=0.15)
 cf = ax_main.contourf(xx, yy, f_norm, levels=np.linspace(0, 1, 6), cmap=cmap)
 
 ax_main.set_xlabel("Kendall's Tau", fontsize=18)
-ax_main.set_ylabel('RMSE', fontsize=18)
+ax_main.set_ylabel('RMSE (log(x))', fontsize=18)
 plt.tick_params(axis='both', which='major', labelsize=16)
 ax_main.set_xlim(xmin, xmax)
 ax_main.set_ylim(ymin, ymax)
 
-highlight_list = ["HPHUVLMMVZITSG-LURJTMIESA-N", "DFPAKSUCGFBDDF-UHFFFAOYSA-N"]
+highlight_list = ["FPYJFEHAWHCUMM-UHFFFAOYSA-N", "JYGFTBXVXVMTGB-UHFFFAOYSA-N"]
 mask = df['InChIKey'].isin(highlight_list)
 ax_main.scatter(df["Kendall_Distance"], df["RMSE"], s=35, color="black")
 ax_main.scatter(df.loc[mask, "Kendall_Distance"], df.loc[mask, "RMSE"], s=100, color="red")
 
 
 ticks_x = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6]
-ticks_y = [0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6]
+ticks_y = [0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4]
 
 ax_main.set_xticks(ticks_x)
 ax_main.set_yticks(ticks_y)

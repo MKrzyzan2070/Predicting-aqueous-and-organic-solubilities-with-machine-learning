@@ -29,6 +29,11 @@ from Code import BigSolDB_dataset_creation_and_analysis, BigSolDB_molecule_solub
 # make_BigSolDB_dataset = True
 # make_pickle_prediction = True
 
+
+# D E C L A R E   T H E   M O L E C U L E S   O F    I N T E R E S T    H E R E:
+molecules_of_interest = ['HUMNYLRZRPPJDN-UHFFFAOYSA-N',  # Benzaldehyde
+                         'XMGQYMWWDOXHJM-UHFFFAOYSA-N'  # Limonene
+                         ]
 ########################################################################################################################
 temperature = 298.15
 tolerance = 5.0
@@ -40,17 +45,22 @@ make_BigSolDB_dataset = True
 make_pickle_prediction = True
 ### @@@@@@@@
 
+# This model will be used for the train/test not the pipeline predictions
 model = "LightGBM" # Either RF or LightGBM
+# This model will be for the pipeline
+model_pipeline = "LightGBM"
+# The train/test analysis encompasses all the feature type cases: MACCS, GC, and GC-MACCS
+# However for the pipeline, a specific feature-type can be selected. List of the desired
+# feature types is the input, and it will generate the predictions for them:
+feature_type_list_pipeline = ["GC_MACCS"]
+
+
 do_PCA = False
 dataset = "BigSolDB" # This is a relict from when CombiSolu dataset was tried. Still, it will be left in case
                      # analysis will done on CombiSolu dataset at some time
 
 exp_inchikey = None
 if exclude_mols is True:
-    # The list of the molecules of interest which are to be excluded from the dataset to avoid data leakage:
-    molecules_of_interest = ['HUMNYLRZRPPJDN-UHFFFAOYSA-N', # Benzaldehyde
-                             'XMGQYMWWDOXHJM-UHFFFAOYSA-N'  # Limonene
-                             ]
     test_set_InChIKey_list = []
     for mol in molecules_of_interest:
         test_set_InChIKey_list.append(mol)
@@ -71,10 +81,12 @@ BigSolDB_dataset_creation_and_analysis.dataset_creation_and_analysis(exp_inchike
 
 ########################################################################################################################
 # This basically triggers the pipeline predictions for the molecules of interest:
+# Essentially if the molecules are to be excluded then it implies that the solubility predicitions
+# have to be made for them
 if exclude_mols is True:
     tolerance = 5.0
-    model = "LightGBM"
-    feature_type_list = ["GC_MACCS"]
+    model = model_pipeline
+    feature_type_list = feature_type_list_pipeline
     dataset_name_1 = "BigSolDB"
     dataset_name_2 = "BigSolDB" # Those two names are also a relict when the code was primarly written for a different
                                 # dataset

@@ -311,8 +311,8 @@ def Solvent_selection_visalisation(molecule_smiles_list, feature_type, model, cu
         ax = fig.add_axes([0.15, 0.20, 0.45, 0.75])
 
         # The cutoff line:
-        plt.axhline(y=cutoff_1, color='green', linestyle='--', linewidth=3)
-        plt.axhline(y=cutoff_2, color='red', linestyle='--', linewidth=3)
+        plt.axhline(y=cutoff_1, color='red', linestyle='--', linewidth=3)
+        plt.axhline(y=cutoff_2, color='black', linestyle='--', linewidth=3)
         plt.axhline(y=cutoff_3, color='green', linestyle='--', linewidth=3)
 
         # The cutoff color:
@@ -382,13 +382,13 @@ def Solvent_selection_visalisation(molecule_smiles_list, feature_type, model, cu
 
         # Setting the ticks:
         if molecule_smiles == "CC1=CCC(CC1)C(=C)C":
-            x_ticks = [-1.4, -1.2, -1.0, -0.8, -0.6]
-            ax.set_xlim([-1.5, -0.5])
+            x_ticks = [-1.4, -1.2, -1.0, -0.8, -0.6, -0.4, -0.2]
+            ax.set_xlim([-1.5, -0.1])
             ax.set_xticks(x_ticks)
         elif molecule_smiles == "C1=CC=C(C=C1)C=O":
-            x_ticks = [-1.7, -1.5, -1.3, -1.1, -0.9, -0.7, -0.5]
+            x_ticks = [-1.7, -1.5, -1.3, -1.1, -0.9, -0.7, -0.5, -0.3]
             ax.set_xticks(x_ticks)
-            ax.set_xlim([-1.8, -0.4])
+            ax.set_xlim([-1.9, -0.2])
 
         # Making the other spines thicker:
         ax.spines["top"].set_linewidth(2.2)

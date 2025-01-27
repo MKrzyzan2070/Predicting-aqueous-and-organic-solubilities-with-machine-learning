@@ -47,21 +47,36 @@ def average_solubility_and_temperature(df):
 
 
 def make_BigSolDB_datasets(test_set_InChIKey_list, mole_fraction_list, temperature, tolerance):
+    # These are the processing steps:
+    # 1. Only the datapoints that fall within the temperature range (tolerance) are considered
+    # 2. Water is removed from the dataset as the dataset should only contain organic solvents
+    # 3. Removing cases when there is no SMILES string which sometimes happens
+    # 4. Sometimes there are two different SMILES strinsg for the same molecule and that needs to be made uniform
+    # 5. If there are more than 1 solubility value, the final value is the average
+    # 6. Inorganic compounds are excluded from the dataset
+    # 7. Datapoints for solvents that appear less than 10 times are excluded
+
+    ############ @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    ############ @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     #########################################################################################################
     # Loading the initial BigSolDB dataset
     path = "Datasets/Initial_Datasets/BigSolDB.csv"
     GC_df = pd.read_csv(path, usecols=["solute_smiles", "solvent_smiles", "temperature",
                                                    "experimental_logX"])
+    #########################################################################################################
 
+    #########################################################################################################
     GC_df = GC_df[
         (GC_df["temperature"] > temperature - tolerance) & (
                 GC_df["temperature"] < temperature + tolerance)]
+    #########################################################################################################
 
+    #########################################################################################################
     GC_df = GC_df[GC_df["solvent_smiles"] != "O"]
     #########################################################################################################
 
     #########################################################################################################
-    # Deleting the caes when there is no SMILES string:
+    # Deleting the case when there is no SMILES string:
     GC_df['Correct Smiles'] = GC_df['solvent_smiles'].apply(remove_when_no_smiles)
     GC_df = GC_df[GC_df['Correct Smiles']]
     GC_df.drop(columns=['Correct Smiles'], inplace=True)
@@ -88,9 +103,7 @@ def make_BigSolDB_datasets(test_set_InChIKey_list, mole_fraction_list, temperatu
         return Chem.MolToInchiKey(mol)
 
     GC_df["solvent_InChIKey"] = GC_df.apply(fun_to_apply, axis=1)
-    #########################################################################################################
 
-    #########################################################################################################
     # VERY IMPORTANT!!! The same molecule sometimes has different SMILES strings which the causes problems
     # Function to find and save different SMILES strings for identical InChIKeys
     def find_diff_smiles_by_inchikey(df, inchikey_column, smiles_column):
@@ -101,9 +114,7 @@ def make_BigSolDB_datasets(test_set_InChIKey_list, mole_fraction_list, temperatu
             if len(unique_smiles) > 1:
                 diff_smiles_dict[inchikey] = list(unique_smiles)
         return diff_smiles_dict
-    #########################################################################################################
 
-    #########################################################################################################
     different_solute_smiles = find_diff_smiles_by_inchikey(GC_df, 'solute_InChIKey', 'solute_smiles')
     different_solvent_smiles = find_diff_smiles_by_inchikey(GC_df, 'solvent_InChIKey', 'solvent_smiles')
 
@@ -138,7 +149,7 @@ def make_BigSolDB_datasets(test_set_InChIKey_list, mole_fraction_list, temperatu
     #########################################################################################################
 
     #########################################################################################################
-    # Filtering off the inorganic compuunds for both the solute and the solvent:
+    # Filtering off the inorganic compounds for both the solute and the solvent:
     GC_df['IsOrganic'] = GC_df['solvent_smiles'].apply(is_organic)
     GC_df = GC_df[GC_df['IsOrganic']]
     GC_df.drop(columns=['IsOrganic'], inplace=True)
@@ -163,7 +174,7 @@ def make_BigSolDB_datasets(test_set_InChIKey_list, mole_fraction_list, temperatu
 
 
         #################################################################
-        # ONLY THE SOLVENTS WHICH APPEAR FREQUENTLY WILL BE CONSIDERED! This is always being done
+        # ONLY THE SOLVENTS WHICH APPEAR FREQUENTLY WILL BE CONSIDERED! This is always being done!!!
         exclude_rare_solvents = True
         if exclude_rare_solvents is True:
             if solute_solvent_pairs_num > 9:
@@ -174,10 +185,13 @@ def make_BigSolDB_datasets(test_set_InChIKey_list, mole_fraction_list, temperatu
 
     GC_df = GC_df[GC_df['solvent_InChIKey'].isin(accepted_solvent_list)]
     ########################################################################################################
-    # @@@@@@@@@@@@@@
+    ############ @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    ############ @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
     ####### @@@@@@@
     #########################################################################################################
+    # The point of this is for the comparison between the prediction and reality:
+    # Of course, if the molecule is not present in the dataset then empty exp dataset will be created
     exp_solute_solvent_df = GC_df[GC_df["solute_InChIKey"].isin(test_set_InChIKey_list)]
     exp_solute_solvent_df.to_csv(f"Datasets/BigSolDB_Datasets_Processed/Experimental_DF.csv")
     #########################################################################################################
@@ -231,7 +245,8 @@ def make_BigSolDB_datasets(test_set_InChIKey_list, mole_fraction_list, temperatu
             test_dict["solvent_InChIKey"].append(solvent_InChIKey)
 
             test_dict["temperature"].append(temperature)
-            # 0 is just a placeholder, of course
+
+            # 0 is just a placeholder, of course,
             test_dict["experimental_logX"].append(0)
 
     test_df = pd.DataFrame(test_dict)
@@ -259,6 +274,8 @@ def make_BigSolDB_datasets(test_set_InChIKey_list, mole_fraction_list, temperatu
     #########################################################################################################
     # This will be useful for the MACCS later on:
     solute_solvent_df_bare = GC_df.copy()
+    # This is good, I checked and it does contain the molecules of interest at the end of the dataframe:
+    # print(solute_solvent_df_bare)
     #########################################################################################################
     ####### @@@@@@@
 
@@ -364,7 +381,7 @@ def make_BigSolDB_datasets(test_set_InChIKey_list, mole_fraction_list, temperatu
     #########################################################################################################
 
     #########################################################################################################
-    # Ensuring that the training set does not contain the test set - molecules of interest
+    # The test set will be the one containing molecules of interest:
     test_solute_solvent_df = GC_df[GC_df["solute_InChIKey"].isin(test_set_InChIKey_list)]
     GC_df = GC_df[~GC_df["solute_InChIKey"].isin(test_set_InChIKey_list)]
     #########################################################################################################
@@ -462,7 +479,6 @@ def make_BigSolDB_datasets(test_set_InChIKey_list, mole_fraction_list, temperatu
     test_GC_df.loc[0:, "Joback_Tm_solvent"] = Joback_Tm_list
     test_GC_df.loc[0:, "Joback_Tb_solvent"] = Joback_Tb_list
 
-    #print(GC_df.columns)
     # Removing the molecules fow which the feature was unable to be obtained:
     GC_df.dropna(inplace=True)
 
@@ -473,22 +489,26 @@ def make_BigSolDB_datasets(test_set_InChIKey_list, mole_fraction_list, temperatu
 
     #########################################################################################################
     # Getting MACCS:
+
+    # First the a new dataframe needs to be created that is essentially the initial GC_df.
+    # It will have both the training molecules and the molecules of interest for this to work
+    # because the funciton later would otherwise delete the molecules of interest from the solute_solvent_df_bare
+    GC_df_concat = pd.concat([GC_df, test_GC_df])
+
     # Making sure that solute_solvent_bare has the same molecules as present in gc_df after
     # features had been obtained for them. For some molecules, not all feature were able to be obtained:
     solute_solvent_df_bare = solute_solvent_df_bare.reset_index(drop=True)
-    GC_df.reset_index(inplace=True)
-    GC_df['combined_key'] = GC_df['solute_InChIKey'] + '_' + GC_df[
+    GC_df_concat.reset_index(inplace=True)
+    GC_df_concat['combined_key'] = GC_df_concat['solute_InChIKey'] + '_' + GC_df_concat[
         'solvent_InChIKey']
     solute_solvent_df_bare['combined_key'] = solute_solvent_df_bare['solute_InChIKey'] + '_' + solute_solvent_df_bare[
         'solvent_InChIKey']
-    valid_keys = set(GC_df['combined_key'])
+    valid_keys = set(GC_df_concat['combined_key'])
     solute_solvent_df_bare = solute_solvent_df_bare[solute_solvent_df_bare['combined_key'].isin(valid_keys)]
     solute_solvent_df_bare = solute_solvent_df_bare.set_index('combined_key').loc[
-        GC_df['combined_key']].reset_index()
+        GC_df_concat['combined_key']].reset_index()
     solute_solvent_df_bare = solute_solvent_df_bare.drop(columns=['combined_key'])
     solute_solvent_df_bare = solute_solvent_df_bare.reset_index(drop=True)
-
-    GC_df.drop(columns={"combined_key"}, inplace=True)
     ###### @@@@
 
     MACCS_df = solute_solvent_df_bare[
@@ -524,6 +544,7 @@ def make_BigSolDB_datasets(test_set_InChIKey_list, mole_fraction_list, temperatu
     test_MACCS_df = MACCS_df[MACCS_df["solute_InChIKey"].isin(test_set_InChIKey_list)]
     MACCS_df = MACCS_df[~MACCS_df["solute_InChIKey"].isin(test_set_InChIKey_list)]
 
+    # So the MACCS_df works but the test_MACCS is wrong. Let's see it
     MACCS_df.to_csv(f"Datasets/BigSolDB_Datasets_Processed/MACCS_BigSolDB_{tolerance}.csv", index=False)
     test_MACCS_df.to_csv(f"Datasets/BigSolDB_Datasets_Processed/Dataset_for_Predictions/"
                       f"Prediction_MACCS_BigSolDB_{tolerance}.csv")

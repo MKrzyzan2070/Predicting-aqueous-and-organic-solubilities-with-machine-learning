@@ -1,21 +1,29 @@
 import pandas as pd
 from Code import Pipeline_Code
 
-# IMPORTANT
-# First BigSolDB.py has to be run with the outlined settings (pipeline)
-# Second AqSolDB.py has to be run with the outlined settings (pipeline)
-# Those scripts will generate the CSV files of the predictions.
-# The CSV files are being read in the following code:
-# The predictions can be found in the Pipeline Predictions/Pipeline_combined folder
+# I M P O R T A N T !!!!!
+# The following code is mainly just for making the images and plots to visualise the identification
+# of co-solvents. As such, BigSolDB.py and AqSolDB has to be run beforehand to generate relevant datasets.
+# One must make sure that correct settings are chosen before running those scripts. The different, possible settings
+# are given at the beginning of the file and the setting corresponding to the pipeline must be declared.
+
+# T H E    S T E P S
+# First, run the BigSolDB.py with the outlined settings (pipeline)
+# Second, run the AqSolDB.py with the outlined settings (pipeline)
+# Third, run this script
+# The predictions can be found in the Prediction datasets Predictions/Pipeline_combined folder
+
 
 model = "LightGBM"
 feature_type_list = ["GC_MACCS"]
 dataset_name_org = "BigSolDB"
 dataset_name_aq = "AqSolDB"
 tolerance = 5.0
-cutoff_1 = 0.03
-cutoff_2 = 0.16
-cutoff_3 = 0.28
+
+# This is the cutoff obtained from the immiscibility/miscibility analysis
+cutoff_1 = -0.34
+cutoff_2 = 0.08
+cutoff_3 = 0.44
 
 for feature_type in feature_type_list:
     organic_solubility_prediction_df = pd.read_csv(f"Pipeline Predictions/BigSolDB/Pipeline_{feature_type}_"

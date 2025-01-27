@@ -34,14 +34,21 @@ import json
 
 ########################################################################################################################
 ### @@@@@@@@
-make_pickle_train_test_validation = False
-exclude_mols = True
+make_pickle_train_test_validation = True
+exclude_mols = False
 make_AqSolDB_dataset = True
-make_pickle_prediction = True
+make_pickle_prediction = False
 ### @@@@@@@@
 
+# This model will be used for the train/test not the pipeline predictions
 model = "LightGBM" # Either RF or LightGBM
+# This model will be for the pipeline
+model_pipeline = "LightGBM"
 do_PCA = False
+# The train/test analysis encompasses all the feature type cases: MACCS, GC, and GC-MACCS
+# However for the pipeline, a specific feature-type can be selected. List of the desired
+# feature types is the input, and it will generate the predictions for them:
+feature_type_list_pipeline = ["GC_MACCS"]
 
 if exclude_mols is True:
     with open("Code/JSON_files/Solvent_InChIKey_list_BigSolDB.json", 'r') as file:
@@ -69,8 +76,8 @@ AqSolDB_dataset_creation_and_analysis.dataset_creation_and_analysis(make_AqSolDB
 if exclude_mols is True:
     ########################################################################################################################
     make_pickle = True
-    model = "LightGBM"
-    feature_type_list = ["GC_MACCS"]
+    model = model_pipeline
+    feature_type_list = feature_type_list_pipeline
     dataset_name = "AqSolDB"
 
     AqSolDB_molecule_solubility_prediction.molecule_solubility_prediction(make_pickle_prediction, model, feature_type_list,

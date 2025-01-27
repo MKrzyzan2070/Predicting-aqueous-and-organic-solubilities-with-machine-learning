@@ -124,7 +124,7 @@ def KFold_validation_test_validation(path, make_pickle, tolerance, model, do_PCA
             dataset_name = "BigSolDB"
         ###################### RandomForest ######################
         if model == "RF":
-            # Training the model (getting the best parameters):
+            # Training datasets the model (getting the best parameters):
             random_forest_model_fit, grid_search_r2_score = Code.Train_RF_model(kf, x_data_train_split, y_data_train_split_binned,
                                                                                 name, y_data_train_split, dataset_name, tolerance)
             # Saving the model:
@@ -136,7 +136,7 @@ def KFold_validation_test_validation(path, make_pickle, tolerance, model, do_PCA
 
         ###################### LightGBM ######################
         elif model == "LightGBM":
-            # Training the model (getting the best parameters):
+            # Training datasets the model (getting the best parameters):
             lgbm_model_fit, grid_search_r2_score = Code.Train_LGBM_model(kf, x_data_train_split, y_data_train_split_binned,
                                                                          name, y_data_train_split, dataset_name, tolerance)
             with open(f"Pickled Models/{dataset_name}_Plot/Plot_{name}_{model}_{tolerance}.pkl", 'wb') as file:
@@ -171,7 +171,7 @@ def KFold_validation_test_validation(path, make_pickle, tolerance, model, do_PCA
                 ML_model = RandomForestRegressor(**best_params)
             elif model == "LightGBM":
                 ML_model = lgb.LGBMRegressor(**best_params)
-            # Training the model:
+            # Training datasets the model:
             ML_model_fit = ML_model.fit(x_train, y_train)
             # Saving the model:
             with open(f"Pickled Models/{dataset_name}_KFold/KFold_{i}_{name}_{model}_{tolerance}.pkl",
@@ -339,10 +339,10 @@ def Plot(path, tolerance, model, make_pickle, dataset):
     # Some axes stuff:
     if dataset == "CombiSolu":
         ax_main.set_xlabel('Predicted log(S / mol/dm³)', fontsize=20)
-        ax_main.set_ylabel('Experimental log(S / mol/dm³)', fontsize=20)
+        ax_main.set_ylabel('Experimental datasets log(S / mol/dm³)', fontsize=20)
     elif dataset == "BigSolDB":
         ax_main.set_xlabel('Predicted log(x)', fontsize=20)
-        ax_main.set_ylabel('Experimental log(x)', fontsize=20)
+        ax_main.set_ylabel('Experimental datasets log(x)', fontsize=20)
 
     ax_main.set_xticks(ticks)
     ax_main.set_yticks(ticks)
@@ -520,6 +520,7 @@ def Predict_Organic_Solubility(path_dataset_for_training, path_dataset_for_predi
     ########################################## PREDICTION ###################################################
     test_df = pd.read_csv(path_dataset_for_prediction)
     test_solute_smiles_list = list(test_df["solute_smiles"])
+
     #### Just getting the unique values too
     #############################
     test_solvent_smiles_list = list(test_df["solvent_smiles"])

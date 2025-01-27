@@ -1,4 +1,0 @@
-The R2 score from the GridSearch for reference is 0.7796161785526008
-The 5-fold validation R2 score is: 0.7796161785526008
-The 5-fold validation RMSE score is: 0.5504329482273629
-The 5-fold validation MAE score is: 0.3774869653871693

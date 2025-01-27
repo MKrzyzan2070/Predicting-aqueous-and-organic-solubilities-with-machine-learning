@@ -1,7 +1,0 @@
-The test RMSE score is: 1.1527150148015592
-The test R2 score is: 0.7507911647973946
-The test MAE score is: 0.8213173712068742
------------------------------------------------
-The train RMSE score is: 0.7503388617341618
-The train R2 score is: 0.8938136087698713
-The train MAE score is: 0.5297846603812649

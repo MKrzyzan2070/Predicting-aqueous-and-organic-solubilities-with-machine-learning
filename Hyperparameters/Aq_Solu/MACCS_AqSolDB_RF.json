@@ -1,9 +1,0 @@
-{
-    "max_depth": null,
-    "max_features": null,
-    "min_samples_leaf": 2,
-    "min_samples_split": 2,
-    "n_estimators": 300,
-    "oob_score": true,
-    "random_state": 1
-}

@@ -1,0 +1,32 @@
+Solvent,Miscible with Water
+Acetic Acid,True
+Acetone,True
+Acetonitrile,True
+Benzene,False
+Butanol,False
+Butyl Acetate,False
+Carbon Tetrachloride,False
+Chloroform,False
+Cyclohexane,False
+Dichloromethane,False
+Dichloromethane,False
+Diethyl Ether,False
+Diisopropyl Ether,False
+Dimethylformamide,True
+Dimethyl Sulfoxide,True
+Dioxane,True
+Ethanol,True
+Ethyl Acetate,False
+Heptane,False
+Hexane,False
+Isooctane,False
+Isopropanol,True
+Methanol,True
+Methyl Ethyl Ketone,False
+Methyl Tert-Butyl Ether,False
+Pentane,False
+1-Propanol,True
+Tetrahydrofuran,True
+Toluene,False
+Trichloroethylene,False
+Xylene,False

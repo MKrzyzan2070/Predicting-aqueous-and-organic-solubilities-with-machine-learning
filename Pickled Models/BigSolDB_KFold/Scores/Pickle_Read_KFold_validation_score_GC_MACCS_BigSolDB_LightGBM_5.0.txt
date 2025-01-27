@@ -1,0 +1,3 @@
+The 5-fold validation R2 score is: 0.7874216864098267
+The 5-fold validation RMSE score is: 0.5405532720388079
+The 5-fold validation MAE score is: 0.3702055914694027

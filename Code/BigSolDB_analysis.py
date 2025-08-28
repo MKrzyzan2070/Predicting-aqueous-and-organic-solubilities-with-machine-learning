@@ -37,7 +37,7 @@ warnings.filterwarnings('ignore', category=FutureWarning, module='lightgbm')
 
 def KFold_validation_test_validation(path, make_pickle, tolerance, model, do_PCA, dataset):
 
-    # Defining the Stratified KFold for the primary train/test splitting and the 5-fold cross validation later on
+    # Defining the Stratified KFold for the primary train/test splitting and the 5-fold cross-validation later on
     kf = StratifiedKFold(n_splits=5, shuffle=True, random_state=1)
     rmse_scores = []
     r2_scores = []
@@ -491,7 +491,7 @@ def Predict_Organic_Solubility(path_dataset_for_training, path_dataset_for_predi
         dataset_name_2 = "BigSolDB"
 
     if make_pickle is True:
-        # Loading the training dataset which is called the solute_solvent_df
+        # Loading the training dataset which is called the solute_solvent_df.
         # It is basically the CombiSolu-Exp dataset. The trained model will then predict
         # the solubility of organic compounds for each of the solvents in the CombiSolu-Exp dataset
         ########################################## TRAIN ####################################################
@@ -607,11 +607,11 @@ def Mol_Inter_Analysis(prediction_df, molecule_smiles_list, feature_type, model,
         molecule_df.to_csv(f"Pipeline Predictions/{dataset_name}/Best_Worst_Showcase/{feature_type}_{model}/"
                            f"{molecule_smiles}/Solubility Prediction Dataframe.csv")
 
-        # Obtaining the best 5 solvents:
+        # The best 5 solvents:
         best_solvents_dict["Solvent_smiles"] = list(molecule_df["Solvent_smiles"])[0:5]
         best_solvents_dict["Solubility Prediction"] = list(molecule_df["Solubility Prediction"])[0:5]
 
-        # Obtaining the worst 5 solvents:
+        # The worst 5 solvents:
         worst_solvents_dict["Solvent_smiles"] = list(molecule_df["Solvent_smiles"])[-5:]
         worst_solvents_dict["Solubility Prediction"] = list(molecule_df["Solubility Prediction"])[-5:]
 
@@ -653,7 +653,7 @@ def Mol_Inter_Analysis(prediction_df, molecule_smiles_list, feature_type, model,
             ax.set_title(f"{worst_solvents_dict['Solubility Prediction'][i]:.3f}", fontsize=14)  # Increased font size
             ax.axis('off')
 
-        # Display the molecule image in a larger plot
+        # Displaying the molecule image in a larger plot
         mol_ax = fig.add_subplot(grid[:, 6])  # Span across both rows at the last column
         mol_img = Draw.MolToImage(Chem.MolFromSmiles(molecule_smiles), size=(500, 500))  # Adjusted size
         mol_ax.imshow(mol_img)

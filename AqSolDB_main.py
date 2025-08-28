@@ -4,14 +4,14 @@ import json
 
 
 #   I N F O R M A T I O N !!!!
-# It is very important that the whenever a new molecule is added to the list for making predictions i.e. for identifying
+# It is very important that whenever a new molecule is added to the list for making predictions, i.e., for identifying
 # the organic co-solvents a new organic solubility and aquatic solubility dataset must be made. The only thing that can
-# be set to False is the first make_pickle variable which corresponds to the train/test/validation analysis which is not
+# be set to False is the first make_pickle variable which corresponds to the train/test/validation analysis and is not
 # relevant to identifying the organic co-solvents
 
 #   I N F O R M A T I O N !!!!
 # THE REPORTED PERFORMANCE METRIC VALUES REPORTED IN THE PAPER WERE OBTAINED FOR THE EMPTY LIST OF MOLECULES OF INTEREST!
-# this was done by setting exclude_mols to False. In that case, the make_AqSolDB is also being set to true so that
+# This was done by setting exclude_mols to False. In that case, the make_AqSolDB is also being set to true so that
 # the dataset is being reset.
 
 # So, for the train/test/validation, the settings are:
@@ -45,17 +45,17 @@ model = "LightGBM" # Either RF or LightGBM
 # This model will be for the pipeline
 model_pipeline = "LightGBM"
 do_PCA = False
-# The train/test analysis encompasses all the feature type cases: MACCS, GC, and GC-MACCS
-# However for the pipeline, a specific feature-type can be selected. List of the desired
-# feature types is the input, and it will generate the predictions for them:
+# The train/test analysis encompasses all the feature type cases: MACCS, GC, and GC-MACCS.
+# However, for the pipeline, a specific feature-type can be selected.
+# The list of the desired feature types is the input, and it will generate the predictions for them:
 feature_type_list_pipeline = ["GC_MACCS"]
 
 if exclude_mols is True:
     with open("Code/JSON_files/Solvent_InChIKey_list_BigSolDB.json", 'r') as file:
         test_set_InChIKey_list = json.load(file)
 
-    # It is not necessary to exclude benzaldehyde and limonene from the aqSolDB since the potential solvents are being
-    # removed from the dataset as it is the solubility in water of those solvents that is predicted
+    # It is not necessary to exclude benzaldehyde and limonene from the AqSolDB, since the potential solvents are being
+    # removed from the dataset, as it is the solubility in water of those solvents that is being predicted.
     molecules_of_interest = []
     for mol in molecules_of_interest:
         test_set_InChIKey_list.append(mol)

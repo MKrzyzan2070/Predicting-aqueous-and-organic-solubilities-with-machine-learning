@@ -7,7 +7,7 @@ def dataset_creation_and_analysis(exp_inchikey, temperature,
     if exp_inchikey is not None:
         test_set_InChIKey_list.append(exp_inchikey)
 
-    # Setting the list for molar fraction for the UNIFAC features
+    # Creating the list of the molar fractions. This is necessary for the UNIFAC features
     mole_fraction_list = [(0.1, 0.9), (0.2, 0.8), (0.8, 0.2), (0.9, 0.1)]
 
     ############################################ CREATING THE DATASETS ##################################################

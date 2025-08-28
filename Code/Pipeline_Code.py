@@ -40,7 +40,7 @@ def Filter_immiscible_cosolvents(molecule_smiles_list, organic_solubility_predic
                                    on=['Solvent_InChIKey'],
                                    how='inner')
 
-        # As usual, there is a discrepancy among the SMILES strings
+        # As usual, there is a discrepancy among the SMILES strings.
         # The aquatic solubility SMILES column contains the correct SMILES strings
         the_pipeline_df.drop(columns=["Solvent_smiles_x"], inplace=True)
         the_pipeline_df.rename(columns={"Solvent_smiles_y": "Solvent_smiles"}, inplace=True)
@@ -216,14 +216,14 @@ def Make_co_solvent_ranking_plot(molecule_smiles_list, feature_type, model):
         main_path = f"Pipeline Predictions/Pipeline_Combined/{feature_type}_{model}/{molecule_smiles}"
         the_pipeline_df = pd.read_csv(main_path + f"/Pipeline_water_miscible_{molecule_inchikey}.csv")
 
-        # Sort the dataframe by Organic Solubility Prediction
+        # Sorting the dataframe by Organic Solubility Prediction
         the_pipeline_df = the_pipeline_df.sort_values(by="Organic Solubility Prediction", ascending=False)
         the_pipeline_df['Rank'] = range(1, len(the_pipeline_df) + 1)
 
         fig, ax = plt.subplots(figsize=(50, 10)) # Should be extended way to the right
         bars = ax.bar(the_pipeline_df['Rank'], the_pipeline_df["Organic Solubility Prediction"], color="skyblue")
 
-        # Add solvent names and images on top of bars
+        # Adding solvent names and images on top of bars
         i = -1
         for bar, (_, row) in zip(bars, the_pipeline_df.iterrows()):
             i += 1
@@ -256,7 +256,7 @@ def Make_co_solvent_ranking_plot(molecule_smiles_list, feature_type, model):
             mol = Chem.MolFromSmiles(row['Solvent_smiles'])
             img = Draw.MolToImage(mol, size=(250, 250))
 
-            # I dunno why it has to be done but otherwise things simply do not work:
+            # I actually don't know why it has to be done but otherwise things simply do not work:
             img_array = np.array(img)
             imagebox = OffsetImage(img_array, zoom=0.5)
             imagebox.image.axes = ax
@@ -389,7 +389,7 @@ def Solvent_selection_visalisation(molecule_smiles_list, feature_type, model, cu
         ax.spines["top"].set_linewidth(2.2)
         ax.spines["right"].set_linewidth(2.2)
 
-        # Adding the image of the mollecule of interest:
+        # Adding the image of the molecule of interest:
         mol = Chem.MolFromSmiles(molecule_smiles)
         img = Draw.MolToImage(mol, size=(300, 300))
         img = img.convert("RGBA")

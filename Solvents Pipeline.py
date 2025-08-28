@@ -2,17 +2,16 @@ import pandas as pd
 from Code import Pipeline_Code
 
 # I M P O R T A N T !!!!!
-# The following code is mainly just for making the images and plots to visualise the identification
-# of co-solvents. As such, BigSolDB.py and AqSolDB has to be run beforehand to generate relevant datasets.
-# One must make sure that correct settings are chosen before running those scripts. The different, possible settings
-# are given at the beginning of the file and the setting corresponding to the pipeline must be declared.
+# The following code is mainly just for making the images and plots to visualize the identification
+# of co-solvents. As such, BigSolDB.py and AqSolDB.py must be run beforehand to generate relevant datasets.
+# One must make sure that the correct settings are chosen before running those scripts. The different possible settings
+# are given at the beginning of the file, and the setting corresponding to the pipeline must be declared.
 
 # T H E    S T E P S
-# First, run the BigSolDB.py with the outlined settings (pipeline)
-# Second, run the AqSolDB.py with the outlined settings (pipeline)
-# Third, run this script
-# The predictions can be found in the Prediction datasets Predictions/Pipeline_combined folder
-
+# First, run BigSolDB.py with the outlined settings (pipeline).
+# Second, run AqSolDB.py with the outlined settings (pipeline).
+# Third, run this script.
+# The predictions can be found in the Prediction datasets folder: Predictions/Pipeline_combined
 
 model = "LightGBM"
 feature_type_list = ["GC_MACCS"]
@@ -37,7 +36,7 @@ for feature_type in feature_type_list:
     Pipeline_Code.Filter_immiscible_cosolvents(molecule_smiles_list, organic_solubility_prediction_df, aquatic_solubility_prediction_df,
                                 feature_type, model, cutoff_1, cutoff_2, cutoff_3)
 
-    # Drawing the water miscible co-solvents:
+    # Drawing the water-miscible co-solvents:
     Pipeline_Code.Draw_co_solvent_molecules(molecule_smiles_list, feature_type, model)
 
     # Making the co-solvent plot:

@@ -13,17 +13,17 @@ gc_maccs_df = pd.read_csv("Datasets/Dataset_for_case_study_analysis/GC_MACCS_Big
 
 #   I N F O R M A T I O N !!!!
 # Because this code generates a new dataset for each of the case-study molecules, one must regenerate the datasets when
-# performing the train/test/validation analysis. Basically the reason behind is similar to when making the pipeline
-# predictions. The molecule must be excluded from the dataset. The difference is that I am not excluding all the 30
-# molecules from the dataset, because that would remove too many datapoints. Instead, a new dataset is created for
+# performing the train/test/validation analysis. Basically, the reason is similar to when making the pipeline
+# predictions. The molecule must be excluded from the dataset. The difference is that I am not excluding all 30
+# molecules from the dataset because that would remove too many data points. Instead, a new dataset is created for
 # each case study molecule
 
-# The only additional pre-processing for the case-study analysis is that big molecules should be excluded
-# Fragmented molecules should also be excluded. Also, molecules that have less than 5 datapoints also have to
-# be excluded
+# The only additional pre-processing for the case-study analysis is that big molecules should be excluded.
+# Fragmented molecules should also be excluded. Molecules with fewer than 5 data points must also be excluded
 
 # N O T E !!!
-# The dataframe that is being read is already a prepared dataset that contains all the other pre-processing steps
+# The dataframe being read is already a prepared dataset that contains all the other pre-processing steps
+
 
 #############################################################
 # If the molecule is fragmented then it should be removed:
@@ -92,12 +92,12 @@ gc_maccs_df = gc_maccs_df.reset_index(drop=True)
 
 #####################################################################
 n_samples = len(gc_maccs_df)
-# Using the Sturger's rule:
+# Using the Sturges' rule:
 n_bins = 1 + np.log2(n_samples)
-# Becuse binning is done on two features, the total number of bins will be n_bins^2
-# Then the number in rounded up to the nearest integer. T
+# Because binning is done on two features, the total number of bins will be n_bins^2
+# Then the number is rounded up to the nearest integer
 n_bins = int(np.ceil((np.sqrt(n_bins))))
-# The number of bins is 4 btw
+# The number of bins is 4, btw
 # print(n_bins)
 
 
@@ -153,18 +153,18 @@ for feature_type in feature_type_list:
         ########## @@@@@
         temperature = 298.15
         tolerance = 5.0
-        make_pickle = False # Here make pickle is False because I only create the dataset. No analysis is needed
+        make_pickle = False # Here, make pickle is False because I only create the dataset. No analysis is needed
         make_BigSolDB_dataset = True
         model = "LightGBM"
         do_PCA = False
         dataset = "BigSolDB"
-        # Here the lst should be empty and the exp_inchikey will just be added later to the list:
+        # Here the list should be empty and the exp_inchikey will just be added later to the list:
         test_set_InChIKey_list = []
 
         # Reading the gc_maccs again, so it's fresh:
         gc_maccs_df = pd.read_csv("Datasets/Dataset_for_case_study_analysis/GC_MACCS_BigSolDB_5.0.csv")
 
-        # Getting the Inchikey for the molecule that the solubility will be predicted:
+        # Getting the InChIKey for the molecule that the solubility will be predicted:
         exp_inchikey = str(gc_maccs_df[gc_maccs_df["solute_smiles"] == smiles]["solute_InChIKey"].iloc[0])
         print(exp_inchikey)
 
@@ -184,9 +184,9 @@ for feature_type in feature_type_list:
         shutil.copy(f"Datasets/BigSolDB_Datasets_Processed/Experimental_DF.csv",
                     f"Experimental comparison/Experimental datasets/Experimental_DF_{exp_inchikey}.csv")
 
-        # This the dataset for predictions but not the predictions themselves.
+        # This is the dataset for predictions but not the predictions themselves.
         # This is, of course, essentially contains every feature that the model was trained for the molecule
-        # for which the prediction is made. It goes to another Dataset for predictions folder
+        # for which the prediction is made. It goes to another "Dataset for predictions" folder.
 
         shutil.copy(f"Datasets/BigSolDB_Datasets_Processed/Dataset_for_Predictions/"
                                         f"Prediction_{feature_type}_BigSolDB_5.0.csv",
@@ -195,7 +195,7 @@ for feature_type in feature_type_list:
         ########## @@@@@
 
         ########## @@@@@
-        # Must be set to true. However, this will be overwritten witch each subsequent case-study molecule
+        # Must be set to true. However, this will be overwritten with each subsequent case-study molecule.
         make_pickle = True
         tolerance = 5.0
         model = "LightGBM"
@@ -230,7 +230,7 @@ for feature_type in feature_type_list:
 
 
         ###############################################################
-        # This is not very important but it's good to have it:
+        # This is not very important, but it's good to have it:
         solvent_count_df = pd.DataFrame({"Solvent_smiles": smiles_exp_solvents})
         count_list = []
         for smiles_exp_solvent in smiles_exp_solvents:
@@ -254,7 +254,7 @@ for feature_type in feature_type_list:
 
         # While the predictions are made for each solvent found in the initial dataset that appears at least
         # 10 times, the solvents present in the experimental dataset will be different.
-        # The inner merge by the solvents ensures that this the case.
+        # The inner merge by the solvents ensures that this is the case.
         exp_pred_BigSolDB_df = pd.merge(exp_BigSolDB_df, pred_BigSolDB_df, how="inner",
                                         on=["Molecule_InChIKey", "Solvent_InChIKey", "Solvent_smiles"])
         pred_BigSolDB_df = pd.merge(exp_BigSolDB_df, pred_BigSolDB_df, how="inner",
@@ -283,7 +283,7 @@ for feature_type in feature_type_list:
 
         if feature_type == "GC-MACCS":
             feature_type = "GC_MACCS"
-        # I know it's a bit tedious:
+        # I know it's somewhat tedious:
         exp_BigSolDB_df = pd.read_csv(f"Experimental comparison/Experimental datasets/"
                                       f"Experimental_DF_{exp_inchikey}.csv")
         exp_BigSolDB_df.drop(columns="Unnamed: 0", inplace=True)
@@ -319,7 +319,7 @@ for feature_type in feature_type_list:
         pred_BigSolDB_df = pred_BigSolDB_df.sort_values('Solvent_InChIKey')
         pred_BigSolDB_df.drop(columns="Molecule_smiles", inplace=True)
 
-        # Merging so that only solvents for which the exp values is known are present:
+        # Merging so that only solvents for which the exp values are known, are present:
         exp_pred_BigSolDB_df = pd.merge(exp_BigSolDB_df, pred_BigSolDB_df, how="inner",
                                         on=["Solvent_InChIKey", "Solvent_smiles"])
         pred_BigSolDB_df = pd.merge(exp_BigSolDB_df, pred_BigSolDB_df, how="inner",
@@ -345,7 +345,6 @@ for feature_type in feature_type_list:
 
         rmse = round(np.sqrt(mean_squared_error(experimental_solubility_list, prediction_solubility_list)), 3)
 
-        # Add titles for "Experimental datasets Values" and "Predicted Values"
         fig.text(0.4, 0.88, "Experimental Values", fontsize=26, ha='center', color='#8B0000', fontweight='bold')
         fig.text(0.4, 0.43, "Predicted Values", fontsize=26, ha='center', color='#8B0000', fontweight='bold')
 

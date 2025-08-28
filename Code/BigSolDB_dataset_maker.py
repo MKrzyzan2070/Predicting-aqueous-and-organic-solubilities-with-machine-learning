@@ -48,13 +48,13 @@ def average_solubility_and_temperature(df):
 
 def make_BigSolDB_datasets(test_set_InChIKey_list, mole_fraction_list, temperature, tolerance):
     # These are the processing steps:
-    # 1. Only the datapoints that fall within the temperature range (tolerance) are considered
-    # 2. Water is removed from the dataset as the dataset should only contain organic solvents
-    # 3. Removing cases when there is no SMILES string which sometimes happens
-    # 4. Sometimes there are two different SMILES strinsg for the same molecule and that needs to be made uniform
-    # 5. If there are more than 1 solubility value, the final value is the average
-    # 6. Inorganic compounds are excluded from the dataset
-    # 7. Datapoints for solvents that appear less than 10 times are excluded
+    # 1. Only the datapoints that fall within the temperature range (tolerance) are considered.
+    # 2. Water is removed from the dataset, as the dataset should only contain organic solvents.
+    # 3. Removing cases when there is no SMILES string, which sometimes happens.
+    # 4. Sometimes there are two different SMILES strings for the same molecule, and that needs to be made uniform.
+    # 5. If there is more than one solubility value, the final value is the average.
+    # 6. Inorganic compounds are excluded from the dataset.
+    # 7. Datapoints for solvents that appear fewer than 10 times are excluded.
 
     ############ @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     ############ @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -486,13 +486,13 @@ def make_BigSolDB_datasets(test_set_InChIKey_list, mole_fraction_list, temperatu
     #########################################################################################################
     # Getting MACCS:
 
-    # First the a new dataframe needs to be created that is essentially the initial GC_df.
-    # It will have both the training molecules and the molecules of interest for this to work
-    # because the funciton later would otherwise delete the molecules of interest from the solute_solvent_df_bare
+    # First, a new dataframe needs to be created that is essentially the initial GC_df.
+    # It will have both the training molecules and the molecules of interest for this to work,
+    # because the function later would otherwise delete the molecules of interest from the solute_solvent_df_bare.
     GC_df_concat = pd.concat([GC_df, test_GC_df])
 
     # Making sure that solute_solvent_bare has the same molecules as present in gc_df after
-    # features had been obtained for them. For some molecules, not all feature were able to be obtained:
+    # features have been obtained for them. For some molecules, not all features were able to be obtained:
     solute_solvent_df_bare = solute_solvent_df_bare.reset_index(drop=True)
     GC_df_concat.reset_index(inplace=True)
     GC_df_concat['combined_key'] = GC_df_concat['solute_InChIKey'] + '_' + GC_df_concat[
@@ -513,13 +513,13 @@ def make_BigSolDB_datasets(test_set_InChIKey_list, mole_fraction_list, temperatu
 
     def calculate_fingerprints(row):
         fingerprints = np.zeros(2 * fingerprint_length, dtype=int)  # Double length to accommodate both fingerprints
-        # Generate fingerprint for the solute
+        # Generating fingerprint for the solute
         mol_solute = Chem.MolFromSmiles(row["solute_smiles"])
         if mol_solute:
             fingerprint_solute = np.array(MACCSkeys.GenMACCSKeys(mol_solute), dtype=int)
             fingerprints[:fingerprint_length] = fingerprint_solute
 
-        # Generate fingerprint for the solvent
+        # Generating fingerprint for the solvent
         mol_solvent = Chem.MolFromSmiles(row["solvent_smiles"])
         if mol_solvent:
             fingerprint_solvent = np.array(MACCSkeys.GenMACCSKeys(mol_solvent), dtype=int)
@@ -527,7 +527,7 @@ def make_BigSolDB_datasets(test_set_InChIKey_list, mole_fraction_list, temperatu
 
         return fingerprints
 
-    # Apply the function to each row
+    # Applying the function to each row
     MACCS_df['Fingerprints'] = MACCS_df.apply(calculate_fingerprints, axis=1)
     fingerprint_data = np.stack(MACCS_df['Fingerprints'].values)
     column_names = [f"SoluteFingerprint{i}" for i in range(fingerprint_length)] + [f"SolventFingerprint{i}" for i in
@@ -540,7 +540,6 @@ def make_BigSolDB_datasets(test_set_InChIKey_list, mole_fraction_list, temperatu
     test_MACCS_df = MACCS_df[MACCS_df["solute_InChIKey"].isin(test_set_InChIKey_list)]
     MACCS_df = MACCS_df[~MACCS_df["solute_InChIKey"].isin(test_set_InChIKey_list)]
 
-    # So the MACCS_df works but the test_MACCS is wrong. Let's see it
     MACCS_df.to_csv(f"Datasets/BigSolDB_Datasets_Processed/MACCS_BigSolDB_{tolerance}.csv", index=False)
     test_MACCS_df.to_csv(f"Datasets/BigSolDB_Datasets_Processed/Dataset_for_Predictions/"
                       f"Prediction_MACCS_BigSolDB_{tolerance}.csv")

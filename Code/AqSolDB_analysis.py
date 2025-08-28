@@ -28,7 +28,7 @@ warnings.filterwarnings('ignore', category=FutureWarning, module='lightgbm')
 
 def KFold_validation_test_validation(path, make_pickle, model, do_PCA):
 
-    # Defining the Stratified KFold for the primary train/test splitting and the 5-fold cross validation later on
+    # Defining the Stratified KFold for the primary train/test splitting and the 5-fold cross-validation later on
     kf = StratifiedKFold(n_splits=5, shuffle=True, random_state=1)
     rmse_scores = []
     r2_scores = []
@@ -43,7 +43,7 @@ def KFold_validation_test_validation(path, make_pickle, model, do_PCA):
         solute_solvent_df = pd.read_csv(path)
         solute_solvent_df = solute_solvent_df.dropna()
 
-        # Creating the x-data and the y-data:
+        # Creating the x-data and the y-data
         if "index" in solute_solvent_df.columns:
             solute_solvent_df.drop(columns='index', inplace=True)
         if "Unnamed: 0" in solute_solvent_df.columns:
@@ -60,10 +60,10 @@ def KFold_validation_test_validation(path, make_pickle, model, do_PCA):
         solute_solvent_df_y = np.array(solute_solvent_df["Solubility"])
 
         ################################################
-        # The stratified train/test split:
+        # The stratified train/test split
         solute_solvent_df_y_binned  = pd.qcut(solute_solvent_df_y, q=5, labels=False)
         ################################################
-        # MinMax scaling the x data of the dataframe:
+        # MinMax scaling the x data of the dataframe
         scaler = MinMaxScaler()
         solute_solvent_df_x_scaled = scaler.fit_transform(solute_solvent_df_x)
 
@@ -99,7 +99,7 @@ def KFold_validation_test_validation(path, make_pickle, model, do_PCA):
         dataset_name = "Aq_Solu"
         ###################### RandomForest ######################
         if model == "RF":
-            # Training datasets the model (getting the best parameters):
+            # Training the model (getting the best parameters):
             random_forest_model_fit, grid_search_r2_score = Code.Train_RF_model(kf, x_data_train_split, y_data_train_split_binned,
                                                                                 name, y_data_train_split, dataset_name)
             # Saving the model:
@@ -111,7 +111,7 @@ def KFold_validation_test_validation(path, make_pickle, model, do_PCA):
 
         ###################### LightGBM ######################
         elif model == "LightGBM":
-            # Training datasets the model (getting the best parameters):
+            # Training the model (getting the best parameters):
             lgbm_model_fit, grid_search_r2_score = Code.Train_LGBM_model(kf, x_data_train_split, y_data_train_split_binned,
                                                                          name, y_data_train_split, dataset_name)
             with open(f"Pickled Models/Aq_Solu_Plot/Plot_{name}_{model}.pkl", 'wb') as file:
@@ -147,7 +147,7 @@ def KFold_validation_test_validation(path, make_pickle, model, do_PCA):
             elif model == "LightGBM":
                 ML_model = lgb.LGBMRegressor(**best_params)
 
-            # Training datasets the model:
+            # Training the model:
             ML_model_fit = ML_model.fit(x_train, y_train)
             # Saving the model:
             with open(f"Pickled Models/Aq_Solu_KFold/KFold_{i}_{name}_{model}.pkl", 'wb') as file:
@@ -156,7 +156,7 @@ def KFold_validation_test_validation(path, make_pickle, model, do_PCA):
                }, file)
 
             #########################################
-            # Saving the kfold data split:
+            # Saving the k-fold data split:
             df_train_fold_x = pd.DataFrame(x_train)
             df_train_fold_y = pd.DataFrame(y_train)
             df_test_fold_x = pd.DataFrame(x_test)

@@ -37,7 +37,7 @@ def Make_UNIFAC_parameters_from_SMILES_Version1(solute_solvent_df, mole_fraction
 
             # This will be useful to make sure that atoms are not double matched
             # The groups in the UFSG_group_dict are sorted going from most complex
-            # substructure to the least complex substructure. This ensured that most
+            # substructure to the least complex substructure. This ensures that the most
             # complex substructures are matched first.
             matched_atoms_solute = set()
             matched_atoms_solvent = set()
@@ -113,9 +113,9 @@ def Make_UNIFAC_parameters_from_SMILES_Version1(solute_solvent_df, mole_fraction
             ##################################################
             ########### OBTAINING UNIFAC FEATURES ############
             ##################################################
-            # first value of molar fraction is a solute while the second value is the solvent
-            # it is possible (especially if a purely inorganic SMILES sttring was passed) that no
-            # UFSG substructure has been assigned to it. Hence, the try and except statement
+            # First value of molar fraction is the solute, while the second value is the solvent.
+            # It is possible (especially if a purely inorganic SMILES string was passed) that no
+            # UFSG substructure has been assigned to it. Hence, the try and except statement.
 
             try:
                 #### G_Excess features
@@ -126,8 +126,8 @@ def Make_UNIFAC_parameters_from_SMILES_Version1(solute_solvent_df, mole_fraction
 
                 ##############################################################################################
 
-                # Gamma inifinite dilutions:
-                # This can be done once as it yields the same values regardless of the molar fraction (makes sense)
+                # Gamma infinite dilutions:
+                # This can be done once, as it yields the same values regardless of the molar fraction (makes sense).
                 if inf_once is False:
                     gamma_inf_solute = np.log10(GE.gammas_infinite_dilution()[0])
                     gamma_inf_solvent = np.log10(GE.gammas_infinite_dilution()[1])
@@ -137,12 +137,12 @@ def Make_UNIFAC_parameters_from_SMILES_Version1(solute_solvent_df, mole_fraction
 
                 gamma_solute = np.log10(GE.gammas()[0])
                 gamma_solvent = np.log10(GE.gammas()[1])
-                # I won't use the G_excess anymore but let's leave it commented out:
+                # I won't use the G_excess anymore, but let's leave it commented out:
                 #G_Excess = GE.GE()
 
-                # In case of extreme values of gamma, the G_excess will preserve this knowledge while the gamma_solute
-                # and gamma_solvent need to be changed, because otherwise the min_max scaler will produce data that is
-                # very close to one another
+                # In case of extreme values of gamma, the G_excess will preserve this knowledge, while gamma_solute
+                # and gamma_solvent need to be changed because otherwise the min_max scaler will produce data that is
+                # very close to one another.
                 solute_mol_fraction = mole_fraction_tuple[0]
                 solvent_mol_fraction = mole_fraction_tuple[1]
                 if solute_mol_fraction < solvent_mol_fraction:

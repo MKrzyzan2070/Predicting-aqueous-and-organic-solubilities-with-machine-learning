@@ -27,9 +27,8 @@ def inchikey_to_smiles(inchikey_list):
 
     # 22222222      Direct pubchem website access      22222222
     # If Pubchempy doesn't work, which is likely, the json version of the pubchem website will be
-    # accessed and the relevant information will be extracted from it
+    # accessed. Then, the relevant information will be extracted from it
     base_url = "https://pubchem.ncbi.nlm.nih.gov"
-    # Query PubChem for the compound using InChIKey
     for inchikey in inchikey_list:
         url = f"{base_url}/rest/pug/compound/inchikey/{inchikey}/json"
 
@@ -74,10 +73,7 @@ def inchikey_to_name(inchikey_list):
     # 11111111      Pubchempy will be tried first      11111111
 
     # 22222222      Direct pubchem website access      22222222
-    # If Pubchempy doesn't work, which is likely, the json version of the pubchem website will be
-    # accessed and the relevant information will be extracted from it
     base_url = "https://pubchem.ncbi.nlm.nih.gov"
-    # Query PubChem for the compound using InChIKey
     for inchikey in inchikey_list:
         url = f"{base_url}/rest/pug/compound/inchikey/{inchikey}/json"
 

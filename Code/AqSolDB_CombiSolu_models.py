@@ -17,8 +17,8 @@ def Train_RF_model(kf, x_data_train_split, y_data_train_split_binned, name,
                    y_data_train_split, dataset_name, tolerance=None):
 
     ################################################################################################
-    # The  GridSearch. A GridSearch with more params was used before, but so as not to waste time when
-    # training the model, the number of params was highly minimized based on the previous findings.:
+    # The GridSearch with more params was used before, but so as not to waste time when
+    # training the model, the number of params was highly minimized based on the previous findings:
     param_grid = {
         'random_state': [1],
         'oob_score': [True],

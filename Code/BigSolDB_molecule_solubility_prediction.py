@@ -19,7 +19,7 @@ def molecule_solubility_prediction(make_pickle, tolerance, model, feature_type_l
                                            make_pickle, tolerance, model, feature_type, dataset_name_1)
             # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-        # Handling the comparison with experiments case:
+        # Handling the comparison with experiments:
         else:
             path_dataset_for_predictions = (f"Experimental comparison/Datasets for prediction/"
                                             f"For_Prediction_{exp_inchikey}.csv")

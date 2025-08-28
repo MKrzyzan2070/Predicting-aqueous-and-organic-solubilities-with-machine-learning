@@ -1,15 +1,15 @@
 from Code import BigSolDB_dataset_creation_and_analysis, BigSolDB_molecule_solubility_prediction
 
 #   I N F O R M A T I O N !!!!
-# It is very important that the whenever a new molecule is added to the list for making predcitions i.e. for identifying
-# the organic co-solvents a new organic solubility and aquatic solubility dataset must be made. The only thing that can
-# be set to False is the first make_pickle variable which corresponds to the train/test/validation analysis which is not
-# relevant to identifying the organic co-solvents
+# It is very important that whenever a new molecule is added to the list for making predictions, i.e., for identifying
+# the organic co-solvents a new organic solubility and aquatic solubility dataset must be made. # The only thing
+# that can be set to False is the first make_pickle variable, which corresponds to the train/test/validation analysis
+# and is not relevant to identifying the organic co-solvents.
 
 #    I N F O R M A T I O N !!!!
 # THE REPORTED PERFORMANCE METRIC VALUES REPORTED IN THE PAPER WERE OBTAINED FOR THE EMPTY LIST OF MOLECULES OF INTEREST!
-# this was done by setting exclude_mols to False. In that case, the make_AqSolDB is also being set to true so that
-# # the dataset is being reset.
+# This was done by setting exclude_mols to False. In that case, make_AqSolDB is also set to True so that
+# the dataset is reset.
 
 # So, for the train/test/validation, the settings are:
 # make_pickle_train_test_validation = True
@@ -49,15 +49,15 @@ make_pickle_prediction = True
 model = "LightGBM" # Either RF or LightGBM
 # This model will be for the pipeline
 model_pipeline = "LightGBM"
-# The train/test analysis encompasses all the feature type cases: MACCS, GC, and GC-MACCS
-# However for the pipeline, a specific feature-type can be selected. List of the desired
-# feature types is the input, and it will generate the predictions for them:
+# The train/test analysis encompasses all the feature type cases: MACCS, GC, and GC-MACCS.
+# However, for the pipeline, a specific feature-type can be selected.
+# The list of the desired feature types is the input, and it will generate the predictions for them:
 feature_type_list_pipeline = ["GC_MACCS"]
 
 
 do_PCA = False
-dataset = "BigSolDB" # This is a relict from when CombiSolu dataset was tried. Still, it will be left in case
-                     # analysis will done on CombiSolu dataset at some time
+dataset = "BigSolDB" # This is a relic from when CombiSolu dataset was tried. Still, it will be left in case
+                     # analysis will be done on CombiSolu dataset at some time
 
 exp_inchikey = None
 if exclude_mols is True:
@@ -82,15 +82,15 @@ BigSolDB_dataset_creation_and_analysis.dataset_creation_and_analysis(exp_inchike
 
 ########################################################################################################################
 # This basically triggers the pipeline predictions for the molecules of interest:
-# Essentially if the molecules are to be excluded then it implies that the solubility predicitions
+# Essentially, if the molecules are to be excluded, then it implies that the solubility predictions
 # have to be made for them
 if exclude_mols is True:
     tolerance = 5.0
     model = model_pipeline
     feature_type_list = feature_type_list_pipeline
     dataset_name_1 = "BigSolDB"
-    dataset_name_2 = "BigSolDB" # Those two names are also a relict when the code was primarly written for a different
-                                # dataset
+    dataset_name_2 = "BigSolDB" # These two names are relics from when the code
+    # was primarily written for a different dataset.
 
     BigSolDB_molecule_solubility_prediction.molecule_solubility_prediction(make_pickle_prediction, tolerance, model,
                                                                            feature_type_list, dataset_name_1)
@@ -98,4 +98,3 @@ if exclude_mols is True:
     for feature_type in feature_type_list:
         BigSolDB_molecule_solubility_prediction.analyse(dataset_name_1, dataset_name_2, feature_type, model, tolerance)
 ########################################################################################################################
-

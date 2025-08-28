@@ -9,7 +9,7 @@ def dataset_creation_and_analysis(make_AqSolu_dataset, make_pickle, model, do_PC
     ##################################################################################################################
 
     ############################################ CREATING THE DATASETS ###############################################
-    #The dataset will be created only if making the pickle for kfold validation is requested
+    #The dataset will be created only when making the pickle for k-fold validation is requested
     if make_AqSolu_dataset is True:
         AqSolDB_dataset_maker.make_AqSolDB_datasets(test_set_InChIKey_list, mole_fraction_list)
     ###################################################################################################################

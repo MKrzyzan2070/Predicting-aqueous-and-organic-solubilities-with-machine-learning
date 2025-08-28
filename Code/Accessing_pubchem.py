@@ -8,18 +8,22 @@ def inchikey_to_smiles(inchikey_list):
 
     # 11111111      Pubchempy will be tried first      11111111
     for inchikey in inchikey_list:
-        compound = pcp.get_compounds(inchikey, 'inchikey')[0]
-        # Looking at all the possible options:
-        smiles_options = [
-            getattr(compound, 'canonical_smiles', None),
-            getattr(compound, 'isomeric_smiles', None),
-            getattr(compound, 'connectivity_smiles', None)
-        ]
+        try:
+            compound = pcp.get_compounds(inchikey, 'inchikey')[0]
+            # Looking at all the possible options:
+            smiles_options = [
+                getattr(compound, 'canonical_smiles', None),
+                getattr(compound, 'isomeric_smiles', None),
+                getattr(compound, 'connectivity_smiles', None)
+            ]
 
-        for smiles in smiles_options:
-            if smiles is not None and smiles.strip() != "":
-                smiles_list.append(smiles)
-                break
+            for smiles in smiles_options:
+                if smiles is not None and smiles.strip() != "":
+                    smiles_list.append(smiles)
+                    break
+        except:
+            continue
+
     if smiles_list:
         return smiles_list
     # 11111111      Pubchempy will be tried first      11111111
@@ -58,15 +62,18 @@ def inchikey_to_name(inchikey_list):
 
     # 11111111      Pubchempy will be tried first      11111111
     for inchikey in inchikey_list:
-        compound = pcp.get_compounds(inchikey, 'inchikey')[0]
-        # Looking at all the possible options:
-        name_options = [
-            getattr(compound, 'iupac_name', None),
-            getattr(compound, 'synonyms', None)
-        ]
+        try:
+            compound = pcp.get_compounds(inchikey, 'inchikey')[0]
+            # Looking at all the possible options:
+            name_options = [
+                getattr(compound, 'iupac_name', None),
+                getattr(compound, 'synonyms', None)
+            ]
 
-        if name_options[0] is not None and name_options[0].strip() != "":
-            name_list.append(name_options[0])
+            if name_options[0] is not None and name_options[0].strip() != "":
+                name_list.append(name_options[0])
+        except:
+            continue
 
     if name_list:
         return name_list

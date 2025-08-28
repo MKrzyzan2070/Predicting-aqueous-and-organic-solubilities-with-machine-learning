@@ -25,8 +25,13 @@ This project introduces a machine learning workflow to identify organic co-solve
 
 - `Case_study_analysis.py`: Script for the case study analysis, i.e., the assessment of the generalizability of the model.
 
+### **IMPORTANT INFORMATION**
+The scripts can be run through the Python console or in an IDE such as PyCharm.
+**All scripts must be run from the project root directory** Basically, when you clone the repo it can't be in a folder within a folder.
+So, when cloning the repository, make sure that it is not placed inside an extra nested folder.
 
-The scripts can be run through the Python console or in an IDE such as PyCharm
+Some scripts access external websites. In certain cases, frequent or automated access may trigger a purge or rate-limit request from those sites.
+In this case, run the code again some other time because the server might be overloaded. 
 
 ## Dependencies
 

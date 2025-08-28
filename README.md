@@ -2,6 +2,11 @@
 
 This project introduces a machine learning workflow to identify organic co-solvents for a molecule of interest. The workflow combines two solubility models—one being the aqueous solubility model and the other being the organic solvent solubility model. With the aqueous solubility model, the miscibility of potential co-solvents in water is predicted so that only water-miscible solvents are considered. With the organic solvent solubility model, the solvents are ranked based on the predicted solubility of the molecule of interest in them. 
 
+![Workflow for the organic cosolvent identification](Figure 1.png)
+
+**Fig. 1. Workflow for the organic cosolvent identification.** **a)** Representation of the MACCS and GC features used for training ML models. **b)** Two ML models were used: one trained on the AqSolDB dataset to predict aqueous solubility, and the second trained on the BigSolDB dataset to predict organic solubility. This section also includes the schematics of the Light Gradient Boosting Machine architecture. **c)** The workflow for organic cosolvent identification. The aqueous solubility model removes water-immiscible solvents, while the organic solubility model ranks the remaining solvents from best to worst based on the solubility of the molecule of interest.
+
+
 
 ## Project Structure
 
@@ -30,8 +35,8 @@ The scripts can be run through the Python console or in an IDE such as PyCharm.
 **All scripts must be run from the project root directory** Basically, when you clone the repo it can't be in a folder within a folder.
 So, when cloning the repository, make sure that it is not placed inside an extra nested folder.
 
-Some scripts access external websites. In certain cases, frequent or automated access may trigger a purge or rate-limit request from those sites.
-In this case, run the code again some other time because the server might be overloaded. 
+Some scripts access external websites. This may trigger a purge or rate-limit request from those sites.
+In this case, run the code again some other time because the website server might be overloaded. 
 
 ## Dependencies
 

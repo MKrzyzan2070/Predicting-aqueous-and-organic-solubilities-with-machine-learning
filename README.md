@@ -2,7 +2,9 @@
 
 This project introduces a machine learning workflow to identify organic co-solvents for a molecule of interest. The workflow combines two solubility models—one being the aqueous solubility model and the other being the organic solvent solubility model. With the aqueous solubility model, the miscibility of potential co-solvents in water is predicted so that only water-miscible solvents are considered. With the organic solvent solubility model, the solvents are ranked based on the predicted solubility of the molecule of interest in them. 
 
-![Workflow for the organic cosolvent identification](Figure 1.png)
+<br>
+
+![Workflow for the organic cosolvent identification](Figure%201.png)
 
 **Fig. 1. Workflow for the organic cosolvent identification.** **a)** Representation of the MACCS and GC features used for training ML models. **b)** Two ML models were used: one trained on the AqSolDB dataset to predict aqueous solubility, and the second trained on the BigSolDB dataset to predict organic solubility. This section also includes the schematics of the Light Gradient Boosting Machine architecture. **c)** The workflow for organic cosolvent identification. The aqueous solubility model removes water-immiscible solvents, while the organic solubility model ranks the remaining solvents from best to worst based on the solubility of the molecule of interest.
 

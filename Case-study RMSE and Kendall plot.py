@@ -36,7 +36,7 @@ ax_main.set_ylim(ymin, ymax)
 highlight_list = ["FPYJFEHAWHCUMM-UHFFFAOYSA-N", "JYGFTBXVXVMTGB-UHFFFAOYSA-N"]
 mask = df['InChIKey'].isin(highlight_list)
 ax_main.scatter(df["Kendall_Distance"], df["RMSE"], s=35, color="black")
-ax_main.scatter(df.loc[mask, "Kendall_Distance"], df.loc[mask, "RMSE"], s=100, color="red")
+ax_main.scatter(df.loc[mask, "Kendall_Distance"], df.loc[mask, "RMSE"], s=35, color="black")
 
 
 ticks_x = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6]

@@ -142,6 +142,7 @@ metrics_df = pd.DataFrame({'InChIKey': [],
                            'Kendall_Distance': [],
                            'RMSE': []})
 ################ @@@@@@@
+print(smiles_list)
 feature_type_list = ["GC_MACCS"]
 for feature_type in feature_type_list:
     for smiles in smiles_list:

@@ -24,7 +24,8 @@ def dataset_creation_and_analysis(exp_inchikey, temperature,
         path_list = [
             "Datasets/BigSolDB_Datasets_Processed/GC_BigSolDB.csv",
             "Datasets/BigSolDB_Datasets_Processed/MACCS_BigSolDB.csv",
-            "Datasets/BigSolDB_Datasets_Processed/GC_MACCS_BigSolDB.csv"
+            "Datasets/BigSolDB_Datasets_Processed/GC_MACCS_BigSolDB.csv",
+            "Datasets/BigSolDB_Datasets_Processed/UNIFAC_BigSolDB.csv"
                         ]
 
         # Using the same code for the analysis as the one used for CombiSolu:

@@ -3,7 +3,7 @@ from Code import UNIFAC_parameters_creation
 from rdkit import Chem
 from rdkit.Chem import Descriptors
 from thermo import Joback
-import pubchempy as pcp
+from Code.Accessing_pubchem import inchikey_to_smiles
 from rdkit.Chem import MACCSkeys
 import numpy as np
 import rdkit.Chem.rdMolDescriptors as rdMolDescriptors
@@ -222,12 +222,8 @@ def make_BigSolDB_datasets(test_set_InChIKey_list, mole_fraction_list, temperatu
         solvent_InChIKey_list.append(inchikey)
         solvent_smiles_list.append(str(smiles[0]))
 
-    test_set_smiles_list = []
-    for inchikey in test_set_InChIKey_list:
-        compound = pcp.get_compounds(inchikey, 'inchikey')
-        smiles = compound[0].isomeric_smiles
-        test_set_smiles_list.append(smiles)
 
+    test_set_smiles_list = inchikey_to_smiles(test_set_InChIKey_list)
     i_1 = -1
     for solute_smiles in test_set_smiles_list:
         i_1 += 1

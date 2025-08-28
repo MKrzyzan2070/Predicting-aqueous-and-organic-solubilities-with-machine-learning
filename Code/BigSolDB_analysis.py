@@ -21,6 +21,9 @@ import seaborn as sns
 import matplotlib.colors as mcolors
 from scipy import stats
 from matplotlib.ticker import MaxNLocator
+
+from Code.AqSolDB_molecule_solubility_prediction import feature_type_list
+
 np.random.seed(1)
 
 #########################
@@ -405,12 +408,15 @@ def Plot(path, tolerance, model, make_pickle, dataset):
                  fontsize=20, verticalalignment='top', horizontalalignment='left',
                  bbox=dict(facecolor='white', alpha=0.8, edgecolor='black', boxstyle='round,pad=0.5', linewidth=1.5),
                  transform=ax_main.transAxes)
+
     if name == "GC_BigSolDB":
         feature_name = "GC"
     elif name == "MACCS_BigSolDB":
         feature_name = "MACCS"
     elif name == "GC_MACCS_BigSolDB":
         feature_name = "GC-MACCS"
+    elif name == "UNIFAC_BigSolDB":
+        feature_name = "UNIFAC"
     # Feature name:
     ax_main.text(0.90, 0.10, feature_name, transform=ax_main.transAxes, ha='right', va='bottom', fontsize=24)
     ###############################################################################
@@ -539,6 +545,8 @@ def Predict_Organic_Solubility(path_dataset_for_training, path_dataset_for_predi
     x_data_for_prediction = test_df.drop(
         columns=["solute_smiles", "solvent_smiles", "Solubility", "solute_InChIKey",
                  "solvent_InChIKey"])
+
+    #print(test_df)
     x_data_for_prediction_scaled = scaler.transform(x_data_for_prediction)
 
     the_prediction = ML_model_fit.predict(x_data_for_prediction_scaled)

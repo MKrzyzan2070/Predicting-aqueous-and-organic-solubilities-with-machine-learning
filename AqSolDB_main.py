@@ -35,7 +35,7 @@ import json
 ########################################################################################################################
 ### @@@@@@@@
 make_pickle_train_test_validation = True
-exclude_mols = False
+exclude_mols = True
 make_AqSolDB_dataset = True
 make_pickle_prediction = False
 ### @@@@@@@@

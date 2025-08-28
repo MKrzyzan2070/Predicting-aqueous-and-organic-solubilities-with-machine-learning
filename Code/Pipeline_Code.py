@@ -7,7 +7,8 @@ from rdkit.Chem import Draw
 import pandas as pd
 from PIL import Image, ImageDraw, ImageFont
 from rdkit.Chem import inchi
-import pubchempy as pcp
+from Code.Accessing_pubchem import inchikey_to_name
+
 pd.set_option('display.max_columns', None)
 
 
@@ -129,10 +130,7 @@ def Filter_immiscible_cosolvents(molecule_smiles_list, organic_solubility_predic
 
         ########################################################################################
         InChIKey_solvent_list = list(the_pipeline_df["Solvent_InChIKey"])
-        solvent_name_list = []
-        for InChIKey_solvent in InChIKey_solvent_list:
-            solvent_name = pcp.get_compounds(InChIKey_solvent, 'inchikey')[0].iupac_name
-            solvent_name_list.append(solvent_name)
+        solvent_name_list = inchikey_to_name(InChIKey_solvent_list)
         the_pipeline_df["Solvent_name"] = solvent_name_list
 
         # Sorting based on the Organic solubility value:
@@ -148,10 +146,7 @@ def Filter_immiscible_cosolvents(molecule_smiles_list, organic_solubility_predic
 
         # Adding the name of the solvent:
         InChIKey_solvent_list = list(the_pipeline_df_water_misc["Solvent_InChIKey"])
-        solvent_name_list = []
-        for InChIKey_solvent in InChIKey_solvent_list:
-            solvent_name = pcp.get_compounds(InChIKey_solvent, 'inchikey')[0].iupac_name
-            solvent_name_list.append(solvent_name)
+        solvent_name_list = inchikey_to_name(InChIKey_solvent_list)
         the_pipeline_df_water_misc["Solvent_name"] = solvent_name_list
 
         # Sorting based on the Organic solubility value:

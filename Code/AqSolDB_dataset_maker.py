@@ -6,7 +6,7 @@ from rdkit.Chem import Descriptors
 import numpy as np
 from rdkit.Chem import MACCSkeys
 from thermo import Joback
-import pubchempy as pcp
+from Code.Accessing_pubchem import inchikey_to_smiles
 import rdkit.Chem.rdMolDescriptors as rdMolDescriptors
 
 # A comment regarding the SettingWithCopyWarning:
@@ -85,16 +85,9 @@ def make_AqSolDB_datasets(test_set_InChIKey_list, mole_fraction_list):
 
     #########################################################################################################
     # Now, the molecules of interest will be added. Later they are going to be excluded, of course
-    smiles_list = []
-    Solubility_list = []
-
-    for InChIKey in  test_set_InChIKey_list:
-        Solubility_list.append(0)
-        compound = pcp.get_compounds(InChIKey, 'inchikey')
-        smiles = compound[0].isomeric_smiles
-        smiles_list.append(smiles)
-
-    test_df = pd.DataFrame({"InChIKey": test_set_InChIKey_list, "Solubility": Solubility_list, "SMILES": smiles_list
+    test_set_smiles_list = inchikey_to_smiles(test_set_InChIKey_list)
+    test_set_solubility_list = [0 for i in range(len(test_set_InChIKey_list))]
+    test_df = pd.DataFrame({"InChIKey": test_set_InChIKey_list, "Solubility": test_set_solubility_list, "SMILES": test_set_smiles_list
                        })
     solute_solvent_df = pd.concat([solute_solvent_df, test_df])
     solute_solvent_df.reset_index(inplace=True, drop=True)

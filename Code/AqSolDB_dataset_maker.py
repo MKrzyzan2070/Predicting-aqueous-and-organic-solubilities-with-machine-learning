@@ -34,8 +34,12 @@ def make_AqSolDB_datasets(test_set_InChIKey_list, mole_fraction_list):
     #########################################################################################################
 
     #########################################################################################################
-    # VERY IMPORTANT!!! The same molecule sometimes has different SMILES strings which causes problems
-    # That's why I wrote a function to find and save different SMILES strings for identical InChIKeys
+    # ALREADY HAVE THE INCHIKEY FOR THE MOLECULES!!!
+    #########################################################################################################
+
+    #########################################################################################################
+    # VERY IMPORTANT!!! The same molecule sometimes has different SMILES strings which the causes problems
+    # Function to find and save different SMILES strings for identical InChIKeys
     def find_diff_smiles_by_inchikey(df, inchikey_column, smiles_column):
         diff_smiles_dict = {}
         grouped = df.groupby(inchikey_column)
@@ -173,7 +177,7 @@ def make_AqSolDB_datasets(test_set_InChIKey_list, mole_fraction_list):
 
     #########################################################################################################
     # Obtaining UNIFAC:
-    # This step is not done for pipeline
+    # This step is not done for pipeline.
     UNIFAC_list = ['solute_smiles', 'solvent_smiles', 'solute_InChIKey', 'solvent_InChIKey', 'Solubility']
     for UNIFAC_column in UNIFAC_column_list:
         if "gamma" in UNIFAC_column and "solvent" in UNIFAC_column:
@@ -182,7 +186,7 @@ def make_AqSolDB_datasets(test_set_InChIKey_list, mole_fraction_list):
             UNIFAC_list.append(UNIFAC_column)
 
     #########################################################################################################
-    
+
     #########################################################################################################
     # Getting other GC features:
     GC_list = [
@@ -196,7 +200,7 @@ def make_AqSolDB_datasets(test_set_InChIKey_list, mole_fraction_list):
 
     for UNIFAC_column in UNIFAC_column_list:
         GC_list.append(UNIFAC_column)
-    
+
     GC_df = solute_solvent_df[GC_list]
     test_GC_df = test_solute_solvent_df[GC_list]
 
@@ -244,22 +248,25 @@ def make_AqSolDB_datasets(test_set_InChIKey_list, mole_fraction_list):
     #########################################################################################################
     #########################################################################################################
     # Getting MACCS:
-    # Making sure that solute_solvent_bare has the same molecules as present in gc_df after UNIFAC
-    # features had been obtained for them:
+    # First the a new dataframe needs to be created that is essentially the initial GC_df.
+    # It will have both the training molecules and the molecules of interest for this to work
+    # because the funciton later would otherwise delete the molecules of interest from the solute_solvent_df_bare
+    GC_df_concat = pd.concat([GC_df, test_GC_df])
+
+    # Making sure that solute_solvent_bare has the same molecules as present in gc_df after
+    # features had been obtained for them. For some molecules, not all feature were able to be obtained:
     solute_solvent_df_bare = solute_solvent_df_bare.reset_index(drop=True)
-    GC_df.reset_index(inplace=True)
-    GC_df['combined_key'] = GC_df['solute_InChIKey'] + '_' + GC_df[
+    GC_df_concat.reset_index(inplace=True)
+    GC_df_concat['combined_key'] = GC_df_concat['solute_InChIKey'] + '_' + GC_df_concat[
         'solvent_InChIKey']
     solute_solvent_df_bare['combined_key'] = solute_solvent_df_bare['solute_InChIKey'] + '_' + solute_solvent_df_bare[
         'solvent_InChIKey']
-    valid_keys = set(GC_df['combined_key'])
+    valid_keys = set(GC_df_concat['combined_key'])
     solute_solvent_df_bare = solute_solvent_df_bare[solute_solvent_df_bare['combined_key'].isin(valid_keys)]
     solute_solvent_df_bare = solute_solvent_df_bare.set_index('combined_key').loc[
-        GC_df['combined_key']].reset_index()
+        GC_df_concat['combined_key']].reset_index()
     solute_solvent_df_bare = solute_solvent_df_bare.drop(columns=['combined_key'])
     solute_solvent_df_bare = solute_solvent_df_bare.reset_index(drop=True)
-
-    GC_df.drop(columns={"combined_key"}, inplace=True)
     ###### @@@@
 
     MACCS_df = solute_solvent_df_bare[
@@ -267,8 +274,8 @@ def make_AqSolDB_datasets(test_set_InChIKey_list, mole_fraction_list):
     fingerprint_length = len(MACCSkeys.GenMACCSKeys(Chem.MolFromSmiles("O")))
 
     def calculate_fingerprints(row):
-        fingerprints = np.zeros(fingerprint_length, dtype=int)  # Double the length to accommodate both fingerprints
-        # Generating fingerprint for the solute
+        fingerprints = np.zeros(fingerprint_length, dtype=int)  # Double length to accommodate both fingerprints
+        # Generate fingerprint for the solute
         mol_solute = Chem.MolFromSmiles(row["solute_smiles"])
         if mol_solute:
             fingerprint_solute = np.array(MACCSkeys.GenMACCSKeys(mol_solute), dtype=int)

@@ -37,7 +37,7 @@ warnings.filterwarnings('ignore', category=FutureWarning, module='lightgbm')
 
 def KFold_validation_test_validation(path, make_pickle, tolerance, model, do_PCA, dataset):
 
-    # Defining the Stratified KFold for the primary train/test splitting and the 5-fold cross-validation later on
+    # Defining the Stratified KFold for the primary train/test splitting and the 5-fold cross validation later on
     kf = StratifiedKFold(n_splits=5, shuffle=True, random_state=1)
     rmse_scores = []
     r2_scores = []
@@ -491,7 +491,7 @@ def Predict_Organic_Solubility(path_dataset_for_training, path_dataset_for_predi
         dataset_name_2 = "BigSolDB"
 
     if make_pickle is True:
-        # Loading the training dataset which is called the solute_solvent_df.
+        # Loading the training dataset which is called the solute_solvent_df
         # It is basically the CombiSolu-Exp dataset. The trained model will then predict
         # the solubility of organic compounds for each of the solvents in the CombiSolu-Exp dataset
         ########################################## TRAIN ####################################################
@@ -578,6 +578,21 @@ def Predict_Organic_Solubility(path_dataset_for_training, path_dataset_for_predi
     return None
 
 
+def sanitize_filename(filename):
+    import re
+    import hashlib
+
+    invalid_chars = r'[<>:"/\\|?*()=\[\]]'
+    sanitized = re.sub(invalid_chars, '_', filename)
+    sanitized = sanitized.strip('. ')
+
+    if len(sanitized) > 20:
+        hash_suffix = hashlib.md5(filename.encode()).hexdigest()[:5]
+        sanitized = sanitized[:15] + '_' + hash_suffix
+
+    return sanitized
+
+
 def Mol_Inter_Analysis(prediction_df, molecule_smiles_list, feature_type, model, dataset):
     for molecule_smiles in molecule_smiles_list:
 
@@ -594,8 +609,10 @@ def Mol_Inter_Analysis(prediction_df, molecule_smiles_list, feature_type, model,
         if "/" in molecule_smiles:
             molecule_smiles = Chem.MolToSmiles(Chem.MolFromSmiles(molecule_smiles), isomericSmiles=False)
 
+
+        sani_molecule_smiles = sanitize_filename(molecule_smiles)
         # Saving the solvents:
-        main_path = f"Pipeline Predictions/{dataset_name}/Best_Worst_Showcase/{feature_type}_{model}/{molecule_smiles}"
+        main_path = f"Pipeline Predictions/{dataset_name}/Best_Worst_Showcase/{feature_type}_{model}/{sani_molecule_smiles}"
         if not os.path.exists(main_path):
             os.makedirs(main_path)
             best_path = main_path + "/Best"
@@ -605,13 +622,13 @@ def Mol_Inter_Analysis(prediction_df, molecule_smiles_list, feature_type, model,
 
         # Saving the dataframe of the organic solvents and the solubility:
         molecule_df.to_csv(f"Pipeline Predictions/{dataset_name}/Best_Worst_Showcase/{feature_type}_{model}/"
-                           f"{molecule_smiles}/Solubility Prediction Dataframe.csv")
+                           f"{sani_molecule_smiles}/Solubility Prediction Dataframe.csv")
 
-        # The best 5 solvents:
+        # Obtaining the best 5 solvents:
         best_solvents_dict["Solvent_smiles"] = list(molecule_df["Solvent_smiles"])[0:5]
         best_solvents_dict["Solubility Prediction"] = list(molecule_df["Solubility Prediction"])[0:5]
 
-        # The worst 5 solvents:
+        # Obtaining the worst 5 solvents:
         worst_solvents_dict["Solvent_smiles"] = list(molecule_df["Solvent_smiles"])[-5:]
         worst_solvents_dict["Solubility Prediction"] = list(molecule_df["Solubility Prediction"])[-5:]
 
@@ -653,13 +670,13 @@ def Mol_Inter_Analysis(prediction_df, molecule_smiles_list, feature_type, model,
             ax.set_title(f"{worst_solvents_dict['Solubility Prediction'][i]:.3f}", fontsize=14)  # Increased font size
             ax.axis('off')
 
-        # Displaying the molecule image in a larger plot
+        # Display the molecule image in a larger plot
         mol_ax = fig.add_subplot(grid[:, 6])  # Span across both rows at the last column
         mol_img = Draw.MolToImage(Chem.MolFromSmiles(molecule_smiles), size=(500, 500))  # Adjusted size
         mol_ax.imshow(mol_img)
         mol_ax.axis('off')
 
-        fig_path = main_path + f"/Best_Worst_{molecule_smiles}.png"
+        fig_path = main_path + f"/Best_Worst_{sani_molecule_smiles}.png"
         plt.savefig(fig_path)
         plt.close()
 
@@ -777,10 +794,11 @@ def plot_solvents_on_axis(prediction_df, molecule_smiles_list, feature_type, mod
         elif dataset == "BigSolDB":
             dataset_name = "BigSolDB"
 
-        main_path = f"Pipeline Predictions/{dataset_name}/Best_Worst_Showcase/{feature_type}_{model}/{molecule_smiles}"
+        sani_molecule_smiles = sanitize_filename(molecule_smiles)
+        main_path = f"Pipeline Predictions/{dataset_name}/Best_Worst_Showcase/{feature_type}_{model}/{sani_molecule_smiles}"
         if not os.path.exists(main_path):
             os.makedirs(main_path)
-        fig_path = main_path + f"/Solvent_Spectrum_{molecule_smiles}.png"
+        fig_path = main_path + f"/Solvent_Spectrum_{sani_molecule_smiles}.png"
         plt.savefig(fig_path, bbox_inches='tight', dpi=200)
         plt.close()
 
@@ -789,8 +807,7 @@ def plot_solubility_violin(prediction_df, molecule_smiles_list, feature_type, mo
 
     for molecule_smiles in molecule_smiles_list:
         molecule_df = prediction_df[prediction_df["Molecule_smiles"] == molecule_smiles].copy()
-        if "/" in molecule_smiles:
-            molecule_smiles = Chem.MolToSmiles(Chem.MolFromSmiles(molecule_smiles), isomericSmiles=False)
+        sani_molecule_smiles = sanitize_filename(molecule_smiles)
 
         violin = sns.violinplot(y=molecule_df['Solubility Prediction'],
                                 inner='quartile',
@@ -810,10 +827,10 @@ def plot_solubility_violin(prediction_df, molecule_smiles_list, feature_type, mo
         elif dataset == "BigSolDB":
             dataset_name = "BigSolDB"
 
-        main_path = f"Pipeline Predictions/{dataset_name}/Best_Worst_Showcase/{feature_type}_{model}/{molecule_smiles}"
+        main_path = f"Pipeline Predictions/{dataset_name}/Best_Worst_Showcase/{feature_type}_{model}/{sani_molecule_smiles}"
         if not os.path.exists(main_path):
             os.makedirs(main_path)
-        fig_path = main_path + f"/Solubility_Violin_{molecule_smiles}.png"
+        fig_path = main_path + f"/Solubility_Violin_{sani_molecule_smiles}.png"
         plt.tight_layout()
         plt.savefig(fig_path)
         plt.close()
